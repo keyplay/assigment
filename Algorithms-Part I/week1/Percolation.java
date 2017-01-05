@@ -1,3 +1,12 @@
+/******************************************************************************
+ *  Compilation:  javac-algs4 Percolation.java
+ *  Execution:    java-algs4 Percolation.java
+ *  Dependencies: Percolation.java                
+ *
+ *  This program takes no command-line argument.
+ *
+ ******************************************************************************/
+
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
