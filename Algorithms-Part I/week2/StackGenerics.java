@@ -1,4 +1,4 @@
-public class LinkedStack<Item> {
+public class StackGenerics<Item> {
     private Node first = null;
     
     private class Node {
