@@ -11,7 +11,9 @@ public class FixedCapacityStackOfString {
     }
     
     public String pop() {
-        return s[--n];
+        String item = s[--n];
+        s[n] = null;
+        return item;
     }
     
     public boolean isEmpty() {
