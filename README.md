@@ -1,3 +1,3 @@
-# homework
+# assigment
 
-harvard-CS50
+assigment of Coursera and edx
