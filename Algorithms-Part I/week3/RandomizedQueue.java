@@ -1,4 +1,4 @@
-/******************************************************************************
+/*******************************************************************************
  *  Compilation:  javac-algs4 RandomizedQueue.java
  *  Execution:    java-algs4 RandomizedQueue
  *  Dependencies: RandomizedQueue.java                
@@ -45,7 +45,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             throw new NullPointerException();
         }
         
-        if (first == items.length) {   //
+        if (first == items.length) {          // if the queue is full, double the size of queue
             resize(2* items.length);
         }
         items[first++] = item;
@@ -61,7 +61,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         items[idx] = items[--first];
         items[first] = null;
         
-        if (4*first <= items.length && items.length > MIN_SIZE) {
+        if (4*first <= items.length && items.length > MIN_SIZE) {   // if the queue is quarter of total size, halve the size of queue
             resize(items.length / 2);
         }
         
