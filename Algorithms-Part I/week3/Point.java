@@ -1,15 +1,16 @@
 /******************************************************************************
- *  Compilation:  javac Point.java
- *  Execution:    java Point
- *  Dependencies: none
+ *  Compilation:  javac-algs4 Point.java
+ *  Execution:    java-algs4 Point testfilename.txt
+ *  Dependencies: FastCollinearPoints.java, BruteCollinearPoints.java
  *  
  *  An immutable data type for points in the plane.
+ *  Take the input data from textfile.
  *  For use on Coursera, Algorithms Part I programming assignment.
  *
  ******************************************************************************/
 
 import java.util.Comparator;
-import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.*;
 
 public class Point implements Comparable<Point> {
 
@@ -59,16 +60,18 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
+        /* YOUR CODE HERE */        
         if (this.y == that.y) {
             if (this.x == that.x) {
                 return Double.NEGATIVE_INFINITY;
             }
             return +0.0;
         }
+
         if (this.x == that.x) {
             return Double.POSITIVE_INFINITY;
         }
-        return (this.y - that.y) / (this.x - that.x);
+        return (double) (this.y - that.y) / (this.x - that.x);
     }
 
     /**
@@ -84,10 +87,13 @@ public class Point implements Comparable<Point> {
      *         argument point
      */
     public int compareTo(Point that) {
+        /* YOUR CODE HERE */
         int diffy = this.y - that.y;
+
         if (diffy == 0) {
             return this.x - that.x;
         }
+
         return diffy;
     }
 
@@ -99,8 +105,21 @@ public class Point implements Comparable<Point> {
      */
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
+        return new SlopeOrder();
     }
 
+    private class SlopeOrder implements Comparator<Point> {
+        public int compare(Point p1, Point p2) {
+            double diffSlope = slopeTo(p1) - slopeTo(p2);
+            if (diffSlope > 0) {
+                return 1;
+            } else if (diffSlope < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
 
     /**
      * Returns a string representation of this point.
@@ -119,5 +138,31 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
     }
 }
