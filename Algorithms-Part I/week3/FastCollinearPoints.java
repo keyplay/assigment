@@ -67,7 +67,8 @@ public class FastCollinearPoints {
                         
                         Point startPoint = slopePointList.get(0);     // get startPoint of segment
                         // if startPoint is equal to beginPoint, then the segment will be stored.
-                        // It is just a rule to avoid the repeated segment
+                        // It is just a rule to avoid the repeated segment. There are other method to avoid this.
+                        // But it can not avoid repeated calculation to improve the efficient
                         if (startPoint == beginPoint) {
                             Point endPoint = slopePointList.get(slopePointList.size()-1);  // get endPoint of segment
                             segmentsList.add(new LineSegment(startPoint, endPoint));    // save the segment
