@@ -1,11 +1,23 @@
 public class Board {
     private int[][] puzzleBlock;
-
-    public Board(int[][] blocks) {               // construct a board from an n-by-n array of blocks
-        puzzleBlock = new int[blocks.length][];  // (where blocks[i][j] = block in row i, column j)
+    private Board[] arrNeighbors;
+    
+    private void exchangBlock(int[][] block, int row1, int col1, int row2, int col2) {
+        int temp = block[row1][col1];
+        block[row1][col1] = block[row2][col2];
+        block[row2][col2] = temp;
+    }
+    
+    private int[][] blockCopy(int[][] blocks) {
+        copy = new int[blocks.length][];  // (where blocks[i][j] = block in row i, column j)
         for (int i = 0; i < blocks.length; i++) {
-            puzzleBlock[i] = blocks[i].clone();
+            copy[i] = blocks[i].clone();
         }
+        return copy;
+    }
+    
+    public Board(int[][] blocks) {               // construct a board from an n-by-n array of blocks
+        puzzleBlock = blockCopy(blocks);
     }
     
     public int dimension() {                // board dimension n
@@ -43,10 +55,114 @@ public class Board {
         return hamming() == 0;
     }
     
-    public Board twin()                    // a board that is obtained by exchanging any pair of blocks
-    public boolean equals(Object y)        // does this board equal y?
-    public Iterable<Board> neighbors()     // all neighboring boards
-    public String toString()               // string representation of this board (in the output format specified below)
-
+    public Board twin() {                   // a board that is obtained by exchanging any pair of blocks
+        int[][] twinBlocks = copy(puzzleBlock);
+        int i = 0;
+        int j = 0;
+        
+        while (twinBlocks[i][j] == 0 || twinBlocks[i][j+1] == 0) {
+            j += 1;
+            if (j >= twinBlocks.length - 1) {
+                j = 0;
+                i += 1;
+            }
+        }
+        exchangBlock(twinBlocks, i, j, i, j+1);
+        return new Board(twinBlocks);
+    }
+    
+    public boolean equals(Object y) {       // does this board equal y?
+        Board temp = (Board) y;
+        for (int i = 0; i < puzzleBlock.length; i++) {
+            for (int j = 0; j < puzzleBlock[i].length; j++) {
+                if (puzzleBlock[i][j] !=  temp[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    public Iterable<Board> neighbors() {    // all neighboring boards
+        public Iterator<Board> iterator() {
+            if (arrNeighbors == null) {
+                getNeighbor();
+            }
+            return new NeighborIterator();
+        }
+    }
+    
+    private class NeighborIterator implements Iterator<Board> {
+        private int index = 0;
+        
+        public boolean hasNext() {
+            return index < arrNeighbors.length;
+        }
+        
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+        
+        public Board next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+                return arrNeighbors[index++];
+            } 
+            
+            return arrNeighbors[index++];
+        }
+    }
+    
+    private void getNeighbor() {
+        List<Board> getNeighbors = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        
+        while (puzzleBlock[i][j] != 0) {
+            j += 1;
+            if (j >= dimension()) {
+                j = 0;
+                i += 1;
+            }
+        }
+        
+        if (i > 0) {
+            int[][] tempNeighbor = blockCopy(puzzleBlock);
+            exchangBlock(tempNeighbor, i-1, j, i, j);
+            getNeighbors.add(new Board(tempNeighbor));
+        }
+        if (i < dimension() - 1) {
+            int[][] tempNeighbor = blockCopy(puzzleBlock);
+            exchangBlock(tempNeighbor, i, j, i+1, j);
+            getNeighbors.add(new Board(tempNeighbor));
+        }
+        if (j > 0) {
+            int[][] tempNeighbor = blockCopy(puzzleBlock);
+            exchangBlock(tempNeighbor, i, j-1, i, j);
+            getNeighbors.add(new Board(tempNeighbor));
+        }
+        if (j < dimension() - 1) {
+            int[][] tempNeighbor = blockCopy(puzzleBlock);
+            exchangBlock(tempNeighbor, i, j, i, j+1);
+            getNeighbors.add(new Board(tempNeighbor));
+        }
+        
+        arrNeighbors = getNeighbors.toArray(new Board[getNeighbors.size()]);
+    }
+    
+    public String toString() {              // string representation of this board (in the output format specified below)
+        StringBuilder stringBoard = new StringBuilder();
+        
+        for (int[] row : puzzleBlock) {
+            for (int block : row) {
+                stringBoard.append(" ");
+                stringBoard.append(block);
+            }
+            stringBoard.append("\n");
+        }
+        
+        return stringBoard.toString();
+    }
+    
     public static void main(String[] args) // unit tests (not graded)
 }
