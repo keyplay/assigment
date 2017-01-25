@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 public class Board {
     private int[][] puzzleBlock;
     private Board[] arrNeighbors;
@@ -9,7 +14,7 @@ public class Board {
     }
     
     private int[][] blockCopy(int[][] blocks) {
-        copy = new int[blocks.length][];  // (where blocks[i][j] = block in row i, column j)
+        int[][] copy = new int[blocks.length][];  // (where blocks[i][j] = block in row i, column j)
         for (int i = 0; i < blocks.length; i++) {
             copy[i] = blocks[i].clone();
         }
@@ -28,7 +33,7 @@ public class Board {
         int valueHam = -1;
         for (int i = 0; i < puzzleBlock.length; i++) {
             for (int j = 0; j < puzzleBlock[i].length; j++) {
-                if (puzzleBlock[i][j] != i*puzzleBlock+j+1) {
+                if (puzzleBlock[i][j] != i*puzzleBlock.length+j+1) {
                     valueHam += 1;
                 }
             }
@@ -42,7 +47,8 @@ public class Board {
         for (int i = 0; i < puzzleBlock.length; i++) {
             for (int j = 0; j < puzzleBlock[i].length; j++) {
                 int temp = puzzleBlock[i][j];
-                if (temp != i*puzzleBlock+j+1 && temp != 0) {
+                if (temp != i*puzzleBlock.length+j+1 && temp != 0) {
+                    temp -= 1;                                  // calculation reason
                     valueMan += Math.abs(temp / dimension() - i) + Math.abs(temp % dimension() - j);
                 }
             }
@@ -56,7 +62,7 @@ public class Board {
     }
     
     public Board twin() {                   // a board that is obtained by exchanging any pair of blocks
-        int[][] twinBlocks = copy(puzzleBlock);
+        int[][] twinBlocks = blockCopy(puzzleBlock);
         int i = 0;
         int j = 0;
         
@@ -72,10 +78,21 @@ public class Board {
     }
     
     public boolean equals(Object y) {       // does this board equal y?
+        // in case the type of y is different
+        if (y == null || getClass() != y.getClass()) {
+            return false;
+        }
+        
         Board temp = (Board) y;
+        
+        // in case the size of y is different
+        if (temp.puzzleBlock.length != puzzleBlock.length) {
+            return false;
+        }
+        
         for (int i = 0; i < puzzleBlock.length; i++) {
             for (int j = 0; j < puzzleBlock[i].length; j++) {
-                if (puzzleBlock[i][j] !=  temp[i][j]) {
+                if (puzzleBlock[i][j] !=  temp.puzzleBlock[i][j]) {
                     return false;
                 }
             }
@@ -84,12 +101,14 @@ public class Board {
     }
     
     public Iterable<Board> neighbors() {    // all neighboring boards
-        public Iterator<Board> iterator() {
-            if (arrNeighbors == null) {
-                getNeighbor();
+        return new Iterable<Board>() {
+            public Iterator<Board> iterator() {
+                if (arrNeighbors == null) {
+                    getNeighbor();
+                }
+                return new NeighborIterator();
             }
-            return new NeighborIterator();
-        }
+        };
     }
     
     private class NeighborIterator implements Iterator<Board> {
@@ -106,7 +125,6 @@ public class Board {
         public Board next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
-                return arrNeighbors[index++];
             } 
             
             return arrNeighbors[index++];
@@ -151,7 +169,7 @@ public class Board {
     }
     
     public String toString() {              // string representation of this board (in the output format specified below)
-        StringBuilder stringBoard = new StringBuilder();
+        StringBuilder stringBoard = new StringBuilder(puzzleBlock.length+"\n");
         
         for (int[] row : puzzleBlock) {
             for (int block : row) {
@@ -164,5 +182,7 @@ public class Board {
         return stringBoard.toString();
     }
     
-    public static void main(String[] args) // unit tests (not graded)
+    public static void main(String[] args) { // unit tests (not graded)
+        return;
+    }
 }
