@@ -1,3 +1,13 @@
+/******************************************************************************
+ *  Compilation:  javac-algs4 Board.java
+ *  Execution:    java-algs4 Board
+ *  Dependencies: None
+ *  
+ *  An immutable data type Board.
+ *  For use on Coursera, Algorithms Part I programming assignment.
+ *
+ ******************************************************************************/
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -131,12 +141,12 @@ public class Board {
         }
     }
     
-    private void getNeighbor() {
+    private void getNeighbor() {      // get all possible neighbors of the board
         List<Board> getNeighbors = new ArrayList<>();
         int i = 0;
         int j = 0;
         
-        while (puzzleBlock[i][j] != 0) {
+        while (puzzleBlock[i][j] != 0) {     // find the blank unit which can be changed
             j += 1;
             if (j >= dimension()) {
                 j = 0;
@@ -144,6 +154,7 @@ public class Board {
             }
         }
         
+        // try all possible situation the blank unit can move
         if (i > 0) {
             int[][] tempNeighbor = blockCopy(puzzleBlock);
             exchangBlock(tempNeighbor, i-1, j, i, j);
