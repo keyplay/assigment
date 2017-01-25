@@ -1,3 +1,13 @@
+/******************************************************************************
+ *  Compilation:  javac-algs4 Solver.java
+ *  Execution:    java-algs4 Solver textfile
+ *  Dependencies: Board.java
+ *  
+ *  An immutable data type Slover.
+ *  For use on Coursera, Algorithms Part I programming assignment.
+ *
+ ******************************************************************************/
+
 import edu.princeton.cs.algs4.*;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,6 +33,7 @@ public class Solver {
         while (!priorizedSteps.min().getBoard().isGoal() && !priorizedStepsTwin.min().getBoard().isGoal()) {
             step = priorizedSteps.delMin();
             for (Board neighbor : step.getBoard().neighbors()) {
+                // if the neighbor is not in the solution step, add it to the priority queue
                 if (!isInSolution(step, neighbor)) {
                     priorizedSteps.insert(new SolutionStep(neighbor, step.getMoves()+1, step));
                 }
@@ -49,6 +60,7 @@ public class Solver {
         }
     }
     
+    // detect if the neighbor is not in the solution step
     private boolean isInSolution(SolutionStep laststep, Board board) {
         SolutionStep tempstep = laststep;
         while (tempstep != null) {
@@ -105,6 +117,7 @@ public class Solver {
         }
     }
     
+    // a data type for priority queue to store the board, moves already has and previous step
     private static class SolutionStep {
         private Board board;
         private int moves;
